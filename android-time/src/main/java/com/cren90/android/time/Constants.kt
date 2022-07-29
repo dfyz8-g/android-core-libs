@@ -1,0 +1,11 @@
+@file:Suppress("unused")
+
+package com.cren90.android.time
+
+const val MILLIS_PER_SECOND = 1000
+const val SECONDS_PER_MINUTE = 60
+const val MILLIS_PER_MINUTE = MILLIS_PER_SECOND * SECONDS_PER_MINUTE
+const val MINUTES_PER_HOUR = 60
+const val MILLIS_PER_HOUR = MILLIS_PER_MINUTE * MINUTES_PER_HOUR
+const val HOURS_PER_DAY = 24
+const val MILLIS_PER_DAY = MILLIS_PER_HOUR * HOURS_PER_DAY
