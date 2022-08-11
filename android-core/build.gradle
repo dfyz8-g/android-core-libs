@@ -1,0 +1,85 @@
+plugins {
+    alias libs.plugins.androidLibrary
+    alias libs.plugins.kotlinAndroid
+    alias libs.plugins.kapt
+    id 'maven-publish'
+}
+
+kapt {
+    correctErrorTypes = true
+}
+
+ext.library_version='1.0.0'
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                // Applies the component for the release build variant.
+                from components.release
+                // You can then customize attributes of the publication as shown below.
+                groupId = "$rootProject.ext.library_group"
+                artifactId = "android-core"
+                version = "$library_version"
+            }
+        }
+    }
+}
+
+android {
+    namespace 'com.cren90.android.core'
+    compileSdk 32
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+
+    defaultConfig {
+        minSdk 23
+        targetSdk 32
+        versionCode 1
+        versionName "$library_version"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    /**
+     * Replace these with the Maven dependencies
+     */
+    implementation project(':android-network')
+    implementation project(':android-time')
+    implementation project(':android-logging')
+    implementation project(':kotlin-common')
+    implementation project(':android-common')
+    implementation project(':android-location')
+
+    api libs.bundles.kotlin
+
+    api libs.inject
+    api libs.hilt
+    kapt libs.hilt.android.kapt
+
+    testImplementation libs.bundles.test
+    androidTestImplementation libs.bundles.test.instrumentation
+}

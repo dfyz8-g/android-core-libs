@@ -1,0 +1,80 @@
+plugins {
+    alias libs.plugins.androidLibrary
+    alias libs.plugins.kotlinAndroid
+    id 'maven-publish'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+kapt {
+    correctErrorTypes = true
+}
+
+ext.library_version='1.0.0'
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                // Applies the component for the release build variant.
+                from components.release
+                // You can then customize attributes of the publication as shown below.
+                groupId = "$rootProject.ext.library_group"
+                artifactId = "android-time"
+                version = "$library_version"
+            }
+        }
+    }
+}
+
+android {
+    namespace 'com.cren90.android.time'
+    compileSdk 32
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+
+    defaultConfig {
+        minSdk 23
+        targetSdk 32
+        versionCode 1
+        versionName "$library_version"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    api project(':android-common')
+    api project(':kotlin-common')
+
+    implementation libs.bundles.serialization
+    kapt libs.moshi.kapt
+
+    api libs.inject
+    api libs.hilt
+    kapt libs.hilt.android.kapt
+
+    testImplementation libs.bundles.test
+    androidTestImplementation libs.bundles.test.instrumentation
+}
