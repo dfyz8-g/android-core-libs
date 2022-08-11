@@ -37,15 +37,18 @@ android {
 
 dependencies {
 
-    implementation project(":android-core")
+    implementation project(':android-core')
+    api libs.kotlin.stdlib
+    api libs.kotlin.coroutines
+    implementation project(path: ':android-logging')
 
-    //implementation "$rootProject.ext.library_group:$rootProject.ext.library_artifact:$rootProject.ext.library_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21"
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    testImplementation libs.bundles.test
+    androidTestImplementation libs.bundles.test.instrumentation
+
+    implementation libs.androidx.coreKtx
+    implementation libs.androidx.appCompat
+    implementation libs.android.material
+    implementation libs.androidx.constraintLayout
+    testImplementation libs.bundles.test
+    androidTestImplementation libs.bundles.test.instrumentation
 }

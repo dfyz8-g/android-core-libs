@@ -1,5 +1,5 @@
 pluginManagement {
-    def kotlin_version = "1.6.21"
+    def kotlin_version = "1.7.10"
     repositories {
         gradlePluginPortal()
         google()
@@ -35,4 +35,7 @@ include ':app'
 include ':android-core'
 include ':android-network'
 include ':android-time'
-include ':app-sample'
+include ':android-logging'
+include ':kotlin-common'
+include ':android-common'
+include ':android-location'

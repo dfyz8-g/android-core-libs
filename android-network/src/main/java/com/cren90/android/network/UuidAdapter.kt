@@ -4,7 +4,7 @@
 
 package com.cren90.android.network
 
-import com.smartrent.common.extension.toUUID
+import com.cren90.kotlin.common.extensions.toUUID
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import java.util.*

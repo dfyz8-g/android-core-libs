@@ -1,6 +1,6 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    alias libs.plugins.androidLibrary
+    alias libs.plugins.kotlinAndroid
     id 'maven-publish'
     id 'kotlin-android'
     id 'kotlin-kapt'
@@ -9,8 +9,6 @@ plugins {
 kapt {
     correctErrorTypes = true
 }
-
-def libVersion = "1.0.0"
 
 afterEvaluate {
     publishing {
@@ -31,6 +29,13 @@ afterEvaluate {
 android {
     namespace 'com.cren90.android.network'
     compileSdk 32
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 
     defaultConfig {
         minSdk 23
@@ -58,8 +63,11 @@ android {
 }
 
 dependencies {
-    implementation project(":android-core")
+    implementation project(":android-logging")
+    implementation project(':kotlin-common')
 
+    api libs.inject
+    api libs.hilt
     kapt libs.hilt.android.kapt
 
     implementation libs.bundles.okhttp

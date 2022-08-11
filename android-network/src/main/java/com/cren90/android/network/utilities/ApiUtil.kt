@@ -1,12 +1,10 @@
 package com.cren90.android.network.utilities
 
-import com.google.firebase.crashlytics.FirebaseCrashlytics
+/*import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.haroldadmin.cnradapter.NetworkResponse
-import timber.log.Timber
+import timber.log.Timber*/
 
-/**
- * Created by Spencer Searle on 4/13/21.
- */
+/*
 object ApiUtil {
     suspend fun <T : Any, U : Any> handleAPIResponse(
         apiCall: NetworkResponse<T, U>,
@@ -49,4 +47,4 @@ object ApiUtil {
             onError(t)
         }
     }
-}
+}*/

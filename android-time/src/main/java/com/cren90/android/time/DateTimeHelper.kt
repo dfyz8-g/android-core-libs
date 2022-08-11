@@ -4,8 +4,8 @@
 
 package com.cren90.android.time
 
-import com.cren90.android.core.providers.resources.StringProvider
-import com.cren90.android.core.providers.system.DateFormatProvider
+import com.cren90.android.common.providers.resources.StringProvider
+import com.cren90.android.common.providers.system.DateFormatProvider
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*

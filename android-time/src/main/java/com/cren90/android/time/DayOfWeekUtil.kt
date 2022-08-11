@@ -6,8 +6,8 @@
 
 package com.cren90.android.time
 
-import com.cren90.android.core.extensions.replaceLast
-import com.cren90.android.core.providers.resources.StringProvider
+import com.cren90.android.common.providers.resources.StringProvider
+import com.cren90.kotlin.common.extensions.replaceLast
 
 fun getDaysString(days: List<WeekDay>, stringProvider: StringProvider): String {
 
@@ -57,17 +57,27 @@ fun getDaysString(days: List<WeekDay>, stringProvider: StringProvider): String {
 
     var daysString = ""
 
-    if (consecutives.isNotEmpty()) {
-        if (consecutives.count() > 1) {
-            daysString =
-                "${mapDayToString(consecutives.first(), stringProvider)} - ${mapDayToString(consecutives.last(), stringProvider)}"
-        }
+    if (consecutives.isNotEmpty() && consecutives.count() > 1) {
+        daysString =
+            "${
+                mapDayToString(
+                    consecutives.first(),
+                    stringProvider
+                )
+            } - ${mapDayToString(consecutives.last(), stringProvider)}"
     }
 
     daysString = if (daysString.isEmpty()) "" else "$daysString, "
 
     daysString =
-        "$daysString${nonconsecutives.joinToString(", ") { mapDayToString(it, stringProvider) }}".trim(' ', ',')
+        "$daysString${
+            nonconsecutives.joinToString(", ") {
+                mapDayToString(
+                    it,
+                    stringProvider
+                )
+            }
+        }".trim(' ', ',')
 
     if (daysString.split(",").size > 2) {
         daysString = daysString.replaceLast(",", ", &")
@@ -143,6 +153,7 @@ fun abbreviateDays(toAbbreviate: String, stringProvider: StringProvider): String
 /**
  * Returns a pair containing the first set of consecutive days followed by the rest of the days in @param days
  */
+@Suppress("kotlin:S3776")
 fun separateFirstSetOfConsecutiveDays(days: List<WeekDay>): Pair<List<WeekDay>, List<WeekDay>> {
 
     val properOrderedDays = listOf(

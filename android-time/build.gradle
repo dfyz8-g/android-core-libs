@@ -1,6 +1,6 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    alias libs.plugins.androidLibrary
+    alias libs.plugins.kotlinAndroid
     id 'maven-publish'
     id 'kotlin-android'
     id 'kotlin-kapt'
@@ -21,7 +21,7 @@ afterEvaluate {
                 from components.release
                 // You can then customize attributes of the publication as shown below.
                 groupId = "$rootProject.ext.library_group"
-                artifactId = "android-network"
+                artifactId = "android-time"
                 version = "$library_version"
             }
         }
@@ -31,6 +31,13 @@ afterEvaluate {
 android {
     namespace 'com.cren90.android.time'
     compileSdk 32
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 
     defaultConfig {
         minSdk 23
@@ -58,11 +65,15 @@ android {
 }
 
 dependencies {
-    implementation project(":android-core")
+    api project(':android-common')
+    api project(':kotlin-common')
 
     implementation libs.bundles.serialization
     kapt libs.moshi.kapt
 
+    api libs.inject
+    api libs.hilt
+    kapt libs.hilt.android.kapt
 
     testImplementation libs.bundles.test
     androidTestImplementation libs.bundles.test.instrumentation

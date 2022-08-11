@@ -4,35 +4,42 @@
 
 package com.cren90.android.network.auth
 
-import com.cren90.android.network.AUTHORIZATION_HEADER_KEY
-import com.cren90.android.network.BEARER_AUTHORIZATION_KEY
-import com.cren90.android.network.IGNORE_UNAUTHORIZED_HEADER
-import com.cren90.android.network.RETRY_COUNT_HEADER
+import com.cren90.android.logging.Logger
+import com.cren90.android.network.*
+import com.cren90.android.network.logging.*
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class OAuthAuthenticator @Inject constructor(
     private val delegate: OAuthRefreshDelegate,
-    private val authRepo: AuthTokenRepo
+    private val authRepo: AuthTokenRepo,
+    private val logger: Logger
 ) :
     Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
-        Timber.i("Authentication error ${response.code} on ${response.request.url}")
+        val requestData = response.getLogData(RETRY_COUNT_KEY to retryCount(response))
+
+
+        if (response.code in VALID_AUTH_ERRORS) {
+            logger.withData(requestData).info(FIRST_AUTH_FAILED_MESSAGE)
+        } else {
+            logger.withData(requestData).warning(FIRST_AUTH_FAILED_MESSAGE)
+        }
 
         if (response.request.headers[IGNORE_UNAUTHORIZED_HEADER] == "true") {
-            Timber.i("Ignoring unauthorized error")
+
+            logger.withData(requestData).info(HEADER_SET_IGNORING_UNAUTHORIZED_MESSAGE)
             return null
         }
 
         if (retryCount(response) > 0) {
-            Timber.i("I've already refreshed this request if we're still not authorized we're not going to be.")
+            logger.withData(requestData).info(REFRESH_ATTEMPTED_STILL_NOT_AUTHED_MESSAGE)
             return null
         }
 
@@ -46,19 +53,19 @@ class OAuthAuthenticator @Inject constructor(
 
             if (hasBearerAuthorizationToken(response)) {
                 if (newToken != accessToken && newToken != null) {
-                    Timber.i("Looks like we've already re-authenticated, retrying with new token!")
+                    logger.withData(requestData).debug(ALREADY_REAUTHENTICATED_RETRYING_MESSAGE)
                     return rewriteRequest(response.request, 1, newToken)
                 } else {
-                    Timber.i("Attempting to re-authenticate...")
+                    logger.withData(requestData).debug(ATTEMPTING_TO_REAUTHENTICATE_MESSAGE)
                     return reAuthenticate(response.request, 1)
                 }
             } else {
-                Timber.i("Not a bearer token request. I don't know how to refresh this... I give up!")
+                logger.withData(requestData).warning(NOT_A_BEARER_REQUEST_MESSAGE)
                 null
             }
         }
 
-        Timber.i("We fell through... this shouldn't have happened but it did...")
+        logger.withData(requestData).error(FALLTHROUGH_MESSAGE)
         return null
     }
 
@@ -73,24 +80,25 @@ class OAuthAuthenticator @Inject constructor(
 
     private fun reAuthenticate(staleRequest: Request, retryCount: Int): Request? {
         if (retryCount > 1) {
-            Timber.i("Re-authenticate retry count exceeded. Giving up!")
+            logger.withData("retryCount" to retryCount)
+                .info(REAUTHENTICATION_RETRY_COUNT_EXCEEDED_MESSAGE)
             return null
         }
 
         delegate.refreshBearerToken()?.let {
-            Timber.i("Retrieved new token, re-attempting, object: ${this.hashCode()}")
+            logger.withData().info(NEW_TOKEN_RETRYING_REQUEST_MESSAGE)
             delegate.oauthBearerToken?.let { bearer ->
-                Timber.i("We have a valid access token, rewrite the request")
+                logger.info(VALID_ACCESS_TOKEN_REWRITE_REQUEST_MESSAGE)
                 return rewriteRequest(staleRequest, retryCount, bearer)
             }
         }
 
-        Timber.i("Failed to retrieve new token, unable to re-authenticate, object: ${this.hashCode()}")
+        logger.info(FAILED_TO_RETRIEVE_NEW_TOKEN_MESSAGE)
 
         return null
     }
 
-    private fun rewriteRequest(staleRequest: Request, retryCount: Int, newToken: String): Request? {
+    private fun rewriteRequest(staleRequest: Request, retryCount: Int, newToken: String): Request {
         return staleRequest.newBuilder()
             .header(AUTHORIZATION_HEADER_KEY, "$BEARER_AUTHORIZATION_KEY $newToken")
             .header(RETRY_COUNT_HEADER, retryCount.toString())

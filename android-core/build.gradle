@@ -1,9 +1,8 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    alias libs.plugins.androidLibrary
+    alias libs.plugins.kotlinAndroid
+    alias libs.plugins.kapt
     id 'maven-publish'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
 }
 
 kapt {
@@ -32,6 +31,13 @@ android {
     namespace 'com.cren90.android.core'
     compileSdk 32
 
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+
     defaultConfig {
         minSdk 23
         targetSdk 32
@@ -58,21 +64,21 @@ android {
 }
 
 dependencies {
-    api libs.kotlin.stdlib
-    api libs.kotlin.coroutines
+    /**
+     * Replace these with the Maven dependencies
+     */
+    implementation project(':android-network')
+    implementation project(':android-time')
+    implementation project(':android-logging')
+    implementation project(':kotlin-common')
+    implementation project(':android-common')
+    implementation project(':android-location')
 
-    implementation libs.androidx.recyclerView
-    implementation libs.androidx.security
+    api libs.bundles.kotlin
 
     api libs.inject
     api libs.hilt
     kapt libs.hilt.android.kapt
-
-    implementation libs.livePrefs
-    implementation libs.flowPrefs
-
-    implementation libs.bundles.serialization
-    kapt libs.moshi.kapt
 
     testImplementation libs.bundles.test
     androidTestImplementation libs.bundles.test.instrumentation
