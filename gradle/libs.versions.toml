@@ -11,7 +11,7 @@ androidx-appCompat = "1.4.2"
 androidx-biometric = "1.1.0"
 androidx-camera = "1.0.2"
 androidx-cardView = "1.0.0"
-androidx-compose = "1.1.1"
+androidx-compose = "1.2.1"
 androidx-constraintLayout = "2.1.4"
 androidx-coordinatorlayout = "1.2.0"
 androidx-core = "1.8.0"
@@ -59,6 +59,14 @@ android-material = { module = "com.google.android.material:material", version.re
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "androidx-annotation" }
 androidx-appCompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appCompat" }
 androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "androidx-biometric" }
+
+androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "androidx-compose" }
+androidx-compose-material = { module = "androidx.compose.material:material", version.ref = "androidx-compose" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "androidx-compose" }
+androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "androidx-compose" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androidx-compose" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "androidx-compose" }
+
 androidx-cardView = { module = "androidx.cardview:cardview", version.ref = "androidx-cardView" }
 androidx-constraintLayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintLayout" }
 androidx-coreKtx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
@@ -177,16 +185,27 @@ timber = { module = "com.jakewharton.timber:timber", version.ref = "timber"}
 
 
 [bundles]
+
+androidx-compose = ["androidx-compose-ui",
+    "androidx-compose-material",
+    "androidx-compose-ui-tooling-preview"
+]
+
+androidx-compose-debug = [
+    "androidx-compose-ui-tooling",
+    "androidx-compose-ui-test-manifest"
+]
+
 kotlin = ["kotlin-stdlib",
     "kotlin-reflect",
     "kotlin-coroutines"]
 
 moshi = ["moshi-adapters",
-         "moshi-kotlin",
-         "moshi-sealed-codegen",
-         "moshi-sealed-runtime",
-         "moshi-sealed-reflect",
-         "moshi-sealed-adapters"]
+    "moshi-kotlin",
+    "moshi-sealed-codegen",
+    "moshi-sealed-runtime",
+    "moshi-sealed-reflect",
+    "moshi-sealed-adapters"]
 
 serialization = ["moshi-adapters",
                  "moshi-kotlin",
