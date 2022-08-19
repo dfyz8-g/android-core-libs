@@ -26,7 +26,8 @@ dependencyResolutionManagement {
         mavenCentral()
         maven { url 'https://maven.google.com' }
         maven { url 'https://jitpack.io'}
-        maven { setUrl('https://kotlin.bintray.com/kotlinx') }
+        maven { url 'https://kotlin.bintray.com/kotlinx' }
+        maven { url 'https://kotlin.bintray.com/kotlin' }
     }
     versionCatalogs{}
 }
@@ -39,4 +40,4 @@ include ':android-logging'
 include ':kotlin-common'
 include ':android-common'
 include ':android-location'
-include ':compose-progress'
+include ':android-compose-progress'

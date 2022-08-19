@@ -1,4 +1,4 @@
-package com.cren90.compose.progress
+package com.cren90.android.compose.progress
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas

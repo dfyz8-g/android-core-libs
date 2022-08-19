@@ -11,12 +11,12 @@ import java.util.*
  */
 object JWTUtil: TokenValidator {
 
-    override fun isTokenValid(encodedToken: String?): Boolean {
-        encodedToken?.let { token ->
-            if (token.isEmpty()) return false
+    override fun isTokenValid(token: String?): Boolean {
+        token?.let { theToken ->
+            if (theToken.isEmpty()) return false
 
             try {
-                val split = token.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }
+                val split = theToken.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }
                     .toTypedArray()
                 val tokenBody = Moshi.Builder()
                     .build()
